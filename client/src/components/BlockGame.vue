@@ -24,14 +24,19 @@ export default {
       }
     };
   },
-  create() {
+  created() {
     this.socket = io("http://localhost:3000");
   },
   mounted() {
     this.context = this.$refs.game.getContext("2d");
     this.socket.on("position", data => {
       this.position = data;
-      this.context.clearRect(0, 0, this.$refs.game.width, this.$refs.game.height) //clears canvas and adds a new square on move
+      this.context.clearRect(
+        0,
+        0,
+        this.$refs.game.width,
+        this.$refs.game.height
+      ); //clears canvas and adds a new square on move
       this.context.fillRect(this.position.x, this.position.y, 20, 20);
     });
   },
