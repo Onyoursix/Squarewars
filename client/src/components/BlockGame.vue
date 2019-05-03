@@ -1,6 +1,13 @@
 <template>
   <div>
-    <canvas ref="game" width="640" height="480" style="border: 1px solid black"></canvas>
+    <canvas
+      id="canvas"
+      ref="game"
+      width="640"
+      height="480"
+      style="border: 1px solid black"
+      @keyup="moveBox"
+    ></canvas>
     <p>
       <button v-on:click="move('right')">Right</button>
       <button v-on:click="move('left')">Left</button>
@@ -28,6 +35,7 @@ export default {
     this.socket = io("http://localhost:3000");
   },
   mounted() {
+    document.addEventListener("keyup", this.moveBox);
     this.context = this.$refs.game.getContext("2d");
     this.socket.on("position", data => {
       this.position = data;
@@ -41,6 +49,17 @@ export default {
     });
   },
   methods: {
+    moveBox() {
+      if (event.keyCode == 38) {
+        this.socket.emit("move", "up");
+      } else if (event.keyCode == 40) {
+        this.socket.emit("move", "down");
+      } else if (event.keyCode == 39) {
+        this.socket.emit("move", "right");
+      } else if (event.keyCode == 37) {
+        this.socket.emit("move", "left");
+      }
+    },
     move(direction) {
       this.socket.emit("move", direction);
     }
